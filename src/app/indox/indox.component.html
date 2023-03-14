@@ -1,0 +1,160 @@
+<div class="body">
+
+    <main class="d-flex flex-nowrap">
+
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: fit-content; height: 100%;">
+            <a [routerLink]="['/mail']" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <svg class="bi pe-none me-2" width="30" height="20">
+                    <use xlink:href="#bootstrap" />
+                </svg>
+                <span class="fs-4">Welcome</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <button type="button" class="btn btn-warning p-2 w-100 " data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop">
+                        Compose
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <a [routerLink]="['/mail']" [ngClass]="{'active':page=='inbox'}"
+                        (click)="page='inbox' ;preview=false " class="nav-link text-white mt-2"
+                        aria-current="page">Inbox</a>
+                </li>
+                <li>
+                    <a [ngClass]="{'active':page=='sent'}" (click)="page='sent'; preview=false "
+                        class="nav-link text-white active mt-2">Sent Mails</a>
+            </ul>
+        </div>
+
+        <div *ngIf="page=='sent'" class="b-example-divider b-example-vr p-2 overflow-scroll" style="width:40%">
+            <div class="overflow-hidden">
+                <div class="form-control " style="height: 95px;  overflow: hidden; "
+                    *ngFor="let user of sentMails?.data; let i=index" (click)="clicked(user)">
+                    <strong class="f-18">{{user?.receiver}} </strong><span style="float: right;"> {{user?.date}}</span>
+                    <br>
+                    <p class="">{{user?.subject}} </p>
+                    <p>{{user?.message}}</p>
+
+                </div>
+
+            </div>
+        </div>
+        <div *ngIf="preview && page=='sent'" class=" b-example-divider b-example-vr p-2 overflow-scroll"
+            style="width:100%">
+            <div class="form-control p-1">
+                <h3>Subject : {{currentData.subject}}</h3>
+            </div>
+            <div>
+                <h5 class="form-control p-1 m-1">From : <strong>{{currentData.sender}} </strong></h5>
+                <h5 class="form-control p-1 m-1">To : <strong>{{currentData.receiver}} </strong></h5>
+            </div>
+            <div class="message-body form-control p-1 m-1" style="height: 100%;">
+                <div *ngIf="currentData.file!=null" class="form-control p-1">
+                     <a  href="{{currentData.file}}"   target=
+                     "_blank" >Attanchment</a>
+                    
+                </div>
+                <div class="date m-1" style="float: right;"><strong>{{currentData.date.slice(0,10)}}</strong> </div>
+                {{currentData.message}}
+               
+            </div>
+            
+        </div> 
+
+
+        <div *ngIf="page=='inbox'" class="b-example-divider b-example-vr p-2 overflow-scroll" style="width:40%">
+            <div class="overflow-auto">
+                <!-- <ul class="form-control" style="height: 100px; overflow: hidden; "
+                    *ngFor="let user of mails?.data; let i=index">
+                    
+                    <strong class="f-18">{{user.sender}} </strong><span style="float: right;"> {{user.date}}</span>
+                    <br>
+                    <strong>{{user.subject}} </strong>
+                    <p>{{user.message}}</p>
+
+
+                </ul> -->
+                <div class="form-control" [ngClass]="{'text-muted':this.user.readStatus=='read'}"
+                    style="height: 100px; overflow: hidden; " *ngFor="let user of mails?.data; let i=index"
+                    (click)="clicked(user)">
+                    <strong class="f-18">{{user?.sender}} </strong><span style="float: right;"> {{user?.date}}</span>
+                    <br>
+                    <strong>{{user?.subject}} </strong>
+                    <p>{{user?.message}}</p>
+
+                </div>
+
+            </div>
+        </div>
+        <div *ngIf="preview && page=='inbox'" class=" b-example-divider b-example-vr p-2 overflow-scroll"
+            style="width:100%">
+            <div class="form-control p-1">
+                <h3>Subject : {{currentData.subject}}</h3>
+            </div>
+            <div>
+                <h5 class="form-control p-1 m-1">From : <strong>{{currentData.sender}} </strong></h5>
+            </div>
+            <div class="message-body form-control p-1 m-1" style="height: 100%;">
+                <div *ngIf="currentData.file!=null" class="form-control p-1">
+                    <a  href="{{currentData.file}}"  target="_blank"  >Attanchment</a>
+                   
+               </div>
+                <div class="date m-1" style="float: right;"><strong>{{currentData.date.slice(0,10)}}</strong> </div>
+                {{currentData.message}}
+            </div>
+
+        </div>
+    </main>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form #formData="ngForm" (ngSubmit)="onSubmitHandler($event) ;formData.resetForm()">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">New Email</h5>
+                    <button type="reset" class="btn-close" data-bs-dismiss="modal" (click)="emailEr=''" value="reset
+                    " aria-label="Close"></button>
+                </div>
+                    <div class="modal-body">
+
+
+                        <div class="to">
+
+                            <span>To : </span> <input type="text" class="form-control  m-2"
+                                style="width:90%; display: inline;" name="receiver" id="receiver"
+                                placeholder="Recipient Email" (change)="checkEmail()" [(ngModel)]="email"
+                                (input)="emailEr=''">
+                            <p class="m-2 text-danger">{{this.emailEr}}</p>
+                        </div>
+                        <div class="subject">
+                            <span>Subject : </span> <input type="text" class="form-control ms-2"
+                                style="width:60%; border-radius: 10px; display: inline;"  name="subject" id="subject"
+                                placeholder="Subject" defa ngModel>
+                        </div>
+                        <hr>
+                        <div class=" ms-2 message-body">
+                            <textarea class=" p-2" name="message" id="message" cols="80" rows="8"
+                                style="border-radius: 20px;" placeholder="Enter Your Message Here" ngModel></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="input-group w-50">
+                            <!-- <label class="bi w-20 bi-pin-angle-fill" for="attachment"><input type="file"
+                                    name="attachment" id="attachment" ngModel></label> -->
+                            <label for="attachment"><img src="./../../assets/images/insert.png" for="attachment"
+                                    alt="pin" style="width: 25px;"><input type="file"  size="100" name="attachment" autofocus
+                                    id="attachment" ></label>
+                                    
+                        </div>
+
+                        <button type="submit" value="reset" data-bs-dismiss="modal" class="btn btn-primary"
+                            [ngClass]="{'disabled':validEmail!=true}">Send</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

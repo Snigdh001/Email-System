@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="login-sec">
+            <h3 class="text-center pt-5 blue-heading ">Sign in to Your Account</h3>
+            <div class="card border-0 mt-4">
+                <div class="card-body border border-grey" style="border-radius: 15px;">
+                    <form #formData="ngForm" (ngSubmit)="onSubmitHandler(formData.value)">
+                        <div class="form-group mb-3">
+                            <label class="mb-1">Email</label>
+                            <input class="form-control " id="inputEmailAddress" type="email" name="email"
+                                placeholder="Enter Email Address" ngModel />
+                            <p class="m-2 text-danger">{{Errordata.errorInterface.emailEr}}</p>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="mb-1">Password</label>
+                            <input class="form-control" id="inputPassword" name="password" type="password" ngModel
+                                placeholder="Enter password" on/>
+                            <p class="m-2 text-danger">{{Errordata.errorInterface.passwordEr}}</p>
+                        </div>
+                        <div class="form-group d-flex justify-content-between">
+
+                        </div>
+                        <div class="form-group  mt-4 mb-0">
+
+                            <button class="d-block btn btn-primary w-100">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+body::before {
+			content: "";
+			background-image: url("https://source.unsplash.com/1920x1080/?Architecture");
+			background-size: cover;
+			background-position: center;
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			/* opacity: 0.8; Change this value to adjust the opacity */
+			z-index: -1;
+		}
